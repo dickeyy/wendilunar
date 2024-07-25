@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Hero from "@/components/Hero.astro";
+import AllProducts from "@/components/AllProducts.astro";
+import { getAllProducts } from "@/lib/shopify";
+import { setCache } from "@/lib/cache";
+
+// const headers = Astro.request.headers;
+// const ip = headers.get("x-vercel-forwarded-for") || Astro.clientAddress;
+// const products = await getAllProducts({ limit: 100, buyerIP: ip });
+
+// setCache.short(Astro);
+---
+
+<Layout title="Wendilunar" showNavbar={false} showFooter={false}>
+    <div class="flex min-h-screen flex-col items-center justify-center px-4 sm:px-8">
+        <!-- <Hero />
+        <AllProducts products={products} /> -->
+        <div class="flex flex-col items-center justify-center gap-2">
+            <img src="/emotes/wendi-pog.webp" alt="Wendilunar" class="size-16 rounded-md" />
+            <p class="text-center text-sm text-foreground/40">coming soon</p>
+        </div>
+    </div>
+</Layout>

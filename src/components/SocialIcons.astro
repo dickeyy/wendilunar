@@ -1,0 +1,70 @@
+---
+import TwitchIcon from "@/icons/TwitchIcon";
+import YouTubeIcon from "@/icons/YouTubeIcon";
+import TikTokIcon from "@/icons/TikTokIcon";
+import InstagramIcon from "@/icons/InstagramIcon";
+import DiscordIcon from "@/icons/DiscordIcon";
+import TwitterIcon from "@/icons/TwitterIcon";
+
+interface Props {
+    size: string;
+}
+
+const { size } = Astro.props as Props;
+---
+
+<div class="flex flex-wrap items-center gap-8">
+    <a
+        href="https://www.twitch.tv/hansumfella"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fill-foreground/40 transition-all ease-in-out hover:fill-primary"
+    >
+        <TwitchIcon className={size} />
+    </a>
+
+    <a
+        href="https://www.youtube.com/@hansumfella"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fill-foreground/40 transition-all ease-in-out hover:fill-primary"
+    >
+        <YouTubeIcon className={size} />
+    </a>
+
+    <a
+        href="https://www.tiktok.com/@hansumfellaclips"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fill-foreground/40 transition-all ease-in-out hover:fill-primary"
+    >
+        <TikTokIcon className={size} />
+    </a>
+
+    <a
+        href="https://www.instagram.com/hansumfella"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fill-foreground/40 transition-all ease-in-out hover:fill-primary"
+    >
+        <InstagramIcon className={size} />
+    </a>
+
+    <a
+        href="https://discord.gg/hansumfella"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fill-foreground/40 transition-all ease-in-out hover:fill-primary"
+    >
+        <DiscordIcon className={size} />
+    </a>
+
+    <a
+        href="https://www.twitter.com/hansumfellalive"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="fill-foreground/40 transition-all ease-in-out hover:fill-primary"
+    >
+        <TwitterIcon className={size} />
+    </a>
+</div>

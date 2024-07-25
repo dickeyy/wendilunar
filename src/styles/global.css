@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @font-face {
+    font-family: "Rubik";
+    src: url("/fonts/Rubik-Variable.ttf") format("truetype");
+    font-style: normal;
+    font-display: swap;
+} */
+
+@layer base {
+    :root {
+        --background: 128 62% 100%;
+        --foreground: 128 80% 3%;
+        --muted: 98 22% 95%;
+        --muted-foreground: 98 3% 40%;
+        --popover: 0 0% 99%;
+        --popover-foreground: 128 80% 2%;
+        --card: 0 0% 99%;
+        --card-foreground: 128 80% 2%;
+        --border: 128 8% 89%;
+        --input: 128 2% 93%;
+        --primary: 128 39% 76%;
+        --primary-foreground: 128 39% 16%;
+        --secondary: 98 39% 76%;
+        --secondary-foreground: 98 39% 16%;
+        --accent: 158 39% 76%;
+        --accent-foreground: 158 39% 16%;
+        --destructive: 16 84% 29%;
+        --destructive-foreground: 16 84% 89%;
+        --ring: 128 39% 76%;
+        --radius: 0.75rem;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-[hsl(var(--border))];
+    }
+    body {
+        /* @apply bg-background text-foreground; */
+        @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    html {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    [type="number"]::-webkit-inner-spin-button,
+    [type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    [type="number"] {
+        -moz-appearance: textfield;
+    }
+    .glass-blur::before {
+        backdrop-filter: blur(8px) contrast(100%);
+        -webkit-backdrop-filter: blur(8px) contrast(100%);
+    }
+    .glass-blur {
+        backdrop-filter: blur(8px) contrast(100%);
+        -webkit-backdrop-filter: blur(8px) contrast(100%);
+    }
+}
+
+@layer base {
+}

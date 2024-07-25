@@ -1,0 +1,18 @@
+---
+import { z } from "zod";
+import { ProductResult } from "@/lib/schema";
+import ProductCard from "./ProductCard.astro";
+
+const ProductsResult = z.array(ProductResult);
+export interface Props {
+    products: z.infer<typeof ProductsResult>;
+}
+const { products } = Astro.props as Props;
+---
+
+<div class="flex flex-col gap-4 px-2 pb-8 md:px-16" id="shop">
+    <h2 class="text-3xl font-bold">Hansumfella Merch</h2>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {products.map((product: any) => <ProductCard product={product} />)}
+    </div>
+</div>

@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ProductDetailsCard from "@/components/ProductDetailsCard";
+import { getProductByHandle } from "@/lib/shopify";
+import ProductImages from "@/components/ProductImages";
+import type { z } from "astro/zod";
+import type { ProductResult } from "@/lib/schema";
+
+const headers = Astro.request.headers;
+const ip = headers.get("x-forwarded-for") || Astro.clientAddress;
+let product: z.infer<typeof ProductResult>;
+try {
+    product = await getProductByHandle(Astro.params.handle || "", ip);
+} catch (e) {
+    console.error(e);
+}
+if (!product) {
+    return Astro.redirect("/404");
+}
+---
+
+<Layout
+    title={product?.title || "Hansumfella merch"}
+    description={product?.description}
+    ogImage={product?.featuredImage?.url}
+>
+    <div class="flex flex-col items-center justify-center px-4 sm:px-8">
+        <div class="flex w-full flex-1 flex-col items-start gap-4 md:w-[85%]">
+            <div class="mt-16 grid w-full grid-cols-1 gap-8 pb-8 sm:pb-0 md:grid-cols-2">
+                <ProductImages product={product} client:load />
+                <ProductDetailsCard product={product} client:load />
+            </div>
+        </div>
+    </div>
+</Layout>

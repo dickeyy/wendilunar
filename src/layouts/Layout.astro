@@ -1,0 +1,81 @@
+---
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+import "@fontsource-variable/rubik";
+
+interface Props {
+    title: string;
+    description?: string;
+    ogImage?: string;
+    showFooter?: boolean;
+    showNavbar?: boolean;
+}
+
+const { title, description, ogImage, showFooter = true, showNavbar = true } = Astro.props as Props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- analytics -->
+        <script defer data-domain="wendilunar.com" src="https://analytics.kyle.so/js/script.js"
+        ></script>
+
+        <meta charset="UTF-8" />
+        <meta name="description" content={description ? description : "Wendilunar Merch"} />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="robots" content="index, follow" />
+        <meta
+            name="keywords"
+            content="
+            wendilunar,
+            wendi,
+            lunar,
+            wendy lunar,
+            merch,
+            merchandise,
+            shirt,
+            socks,
+            hoodie,
+            flag,
+            website,
+            twitch,
+            content,
+            creator,
+            hansum,
+            dickey,
+            youtube,
+            youtuber,
+            streamer,
+            socks,
+            tiktok"
+        />
+
+        <!-- open graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description || "Wendilunar merch coming soon"} />
+        <meta property="og:image" content={ogImage || "/og-image.png"} />
+        <meta property="og:url" content={Astro.url} />
+
+        <!-- twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@hansumfella" />
+        <meta name="twitter:creator" content="@hansumfella" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description || "Wendilunar merch coming soon"} />
+        <meta name="twitter:image" content={ogImage || "/og-image.png"} />
+
+        <title>{title}</title>
+    </head>
+    <body class="m-0 flex min-h-screen flex-col p-0 font-sans">
+        {showNavbar && <Navbar />}
+        <main class="flex-grow">
+            <slot />
+        </main>
+        {showFooter && <Footer />}
+    </body>
+</html>

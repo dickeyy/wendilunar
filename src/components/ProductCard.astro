@@ -1,0 +1,31 @@
+---
+import type { z } from "astro/zod";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
+import type { ProductResult } from "@/lib/schema";
+
+interface Props {
+    product: z.infer<typeof ProductResult>;
+}
+
+const { product } = Astro.props as Props;
+---
+
+<a href={`/product/${product?.handle}`} class="group h-full">
+    <Card className="flex h-full flex-col justify-between bg-zinc-400/20">
+        <CardHeader>
+            <CardTitle className="text-xl font-medium">{product?.title}</CardTitle>
+            <CardDescription className="text-md"
+                >${
+                    parseFloat(product?.variants?.nodes[0]?.price?.amount ?? "0.00").toFixed(2)
+                }</CardDescription
+            >
+        </CardHeader>
+        <CardContent>
+            <img
+                src={product?.images?.nodes[0]?.url}
+                alt={product?.title}
+                class="w-full rounded-sm"
+            />
+        </CardContent>
+    </Card>
+</a>
