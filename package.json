@@ -8,7 +8,8 @@
         "build": "astro check && astro build",
         "preview": "astro preview",
         "astro": "astro",
-        "ui:add": "bunx shadcn-ui@latest add"
+        "ui:add": "bunx shadcn-ui@latest add",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
     },
     "dependencies": {
         "@astrojs/check": "0.9.0",
