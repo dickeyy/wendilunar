@@ -11,8 +11,8 @@
         "ui:add": "bunx shadcn-ui@latest add"
     },
     "dependencies": {
-        "@astrojs/check": "^0.7.0",
-        "@astrojs/react": "^3.6.0",
+        "@astrojs/check": "0.9.0",
+        "@astrojs/react": "3.6.1",
         "@astrojs/tailwind": "^5.1.0",
         "@astrojs/vercel": "^7.7.2",
         "@fontsource-variable/rubik": "^5.0.22",
@@ -26,7 +26,7 @@
         "@shopify/shopify-api": "^11.0.1",
         "@types/react": "^18.3.3",
         "@types/react-dom": "^18.3.0",
-        "astro": "^4.11.3",
+        "astro": "4.12.3",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.1",
         "lucide-react": "^0.399.0",
