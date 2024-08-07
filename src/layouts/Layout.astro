@@ -45,12 +45,10 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
             twitch,
             content,
             creator,
-            hansum,
             dickey,
             youtube,
             youtuber,
             streamer,
-            socks,
             tiktok"
         />
 
@@ -63,15 +61,15 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
 
         <!-- twitter -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@hansumfella" />
-        <meta name="twitter:creator" content="@hansumfella" />
+        <meta name="twitter:site" content="@LoonieBoBoonie" />
+        <meta name="twitter:creator" content="@LoonieBoBoonie" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description || "Wendilunar merch coming soon"} />
         <meta name="twitter:image" content={ogImage || "/og-image.png"} />
 
         <title>{title}</title>
     </head>
-    <body class="m-0 flex min-h-screen flex-col p-0 font-sans">
+    <body class="m-0 flex min-h-screen flex-col p-0">
         {showNavbar && <Navbar />}
         <main class="flex-grow">
             <slot />

@@ -2,16 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @font-face {
+@font-face {
     font-family: "Rubik";
     src: url("/fonts/Rubik-Variable.ttf") format("truetype");
     font-style: normal;
     font-display: swap;
-} */
+}
+
+@font-face {
+    font-family: "RubikBubbles";
+    src: url("/fonts/RubikBubbles-Regular.ttf") format("truetype");
+    font-style: normal;
+    font-display: swap;
+}
 
 @layer base {
     :root {
-        --background: 128 62% 100%;
+        --background: 136 58% 96%;
         --foreground: 128 80% 3%;
         --muted: 98 22% 95%;
         --muted-foreground: 98 3% 40%;
@@ -21,7 +28,7 @@
         --card-foreground: 128 80% 2%;
         --border: 128 8% 89%;
         --input: 128 2% 93%;
-        --primary: 128 39% 76%;
+        --primary: 156 28% 56%;
         --primary-foreground: 128 39% 16%;
         --secondary: 98 39% 76%;
         --secondary-foreground: 98 39% 16%;

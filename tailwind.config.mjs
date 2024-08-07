@@ -15,7 +15,8 @@ module.exports = {
         },
         extend: {
             fontFamily: {
-                sans: ["Rubik", ...defaultTheme.fontFamily.sans]
+                sans: ["Rubik", ...defaultTheme.fontFamily.sans],
+                serif: ["RubikBubbles", ...defaultTheme.fontFamily.serif]
             },
             colors: {
                 border: "hsl(var(--border))",
