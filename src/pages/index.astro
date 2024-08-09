@@ -1,15 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Hero from "@/components/Hero.astro";
-import AllProducts from "@/components/AllProducts.astro";
-import { getAllProducts } from "@/lib/shopify";
-import { setCache } from "@/lib/cache";
+// import AllProducts from "@/components/AllProducts.astro";
+// import { getAllProducts } from "@/lib/shopify";
+// import { setCache } from "@/lib/cache";
 
-const headers = Astro.request.headers;
-const ip = headers.get("x-vercel-forwarded-for") || Astro.clientAddress;
-const products = await getAllProducts({ limit: 100, buyerIP: ip });
+// const headers = Astro.request.headers;
+// const ip = headers.get("x-vercel-forwarded-for") || Astro.clientAddress;
+// const products = await getAllProducts({ limit: 100, buyerIP: ip });
 
-setCache.short(Astro);
+// setCache.short(Astro);
 ---
 
 <Layout title="Wendilunar" showNavbar={false} showFooter={false}>
