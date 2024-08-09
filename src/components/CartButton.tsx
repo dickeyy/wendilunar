@@ -20,7 +20,7 @@ export default function CartButton() {
             className="flex h-fit items-center gap-2 rounded-[0.55rem] px-2 py-[0.4rem]"
             onClick={() => isCartSheetOpen.set(!isOpen)}
         >
-            {size > 0 && <p className="text-xs font-normal">{size}</p>}
+            {size > 0 && <p className="text-xs font-bold">{size}</p>}
             <ShoppingBasketIcon className="size-4" />
         </Button>
     );

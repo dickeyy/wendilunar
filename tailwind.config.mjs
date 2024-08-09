@@ -15,7 +15,7 @@ module.exports = {
         },
         extend: {
             fontFamily: {
-                sans: ["Rubik", ...defaultTheme.fontFamily.sans],
+                sans: ["Nunito", ...defaultTheme.fontFamily.sans],
                 serif: ["RubikBubbles", ...defaultTheme.fontFamily.serif]
             },
             colors: {

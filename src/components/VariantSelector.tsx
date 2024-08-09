@@ -17,7 +17,7 @@ export default function VariantSelector({
             aria-label="Select a variant"
             onValueChange={(variant: any) => setSelectedVariant(variant)}
         >
-            <SelectTrigger className="h-fit max-h-fit w-full bg-input/20 py-2">
+            <SelectTrigger className="h-fit max-h-fit w-full border border-border bg-neutral-400/20 py-2">
                 <SelectValue placeholder={selectedVariant?.title} />
             </SelectTrigger>
             <SelectContent>
@@ -27,11 +27,11 @@ export default function VariantSelector({
                         value={variant}
                         aria-label={variant.title}
                         disabled={variant.availableForSale === false}
-                        className={`${
+                        className={
                             variant.availableForSale === false
                                 ? "cursor-not-allowed text-red-500 text-opacity-50 line-through"
                                 : ""
-                        }`}
+                        }
                     >
                         {variant.title} -{" "}
                         {"$" + parseFloat(variant?.price?.amount ?? "0.00").toFixed(2)}

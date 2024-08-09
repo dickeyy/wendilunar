@@ -9,7 +9,7 @@ export default function ProductImages({ product }: { product: z.infer<typeof Pro
 
     return (
         <div className="flex h-full w-full flex-col">
-            <Card className="h-full bg-zinc-400/20">
+            <Card className="h-full bg-card/60">
                 <CardContent className="flex aspect-square items-center justify-center p-6">
                     <img
                         src={selectedImage?.url}

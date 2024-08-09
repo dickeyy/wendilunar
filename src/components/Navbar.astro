@@ -7,22 +7,17 @@ const donateLink = "https://streamlabs.com/wendilunar/tip";
 
 <nav class="fixed top-2 z-10 mx-auto flex w-screen items-center justify-center">
     <div
-        class="glass-blur flex w-[98%] items-center justify-between rounded-md border bg-zinc-400/20 p-1 shadow-sm sm:w-[95.8%]"
+        class="glass-blur flex w-[98%] items-center justify-between rounded-md border border-accent/20 bg-accent/20 p-1 shadow-sm sm:w-[95.8%]"
     >
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 text-sm font-medium text-foreground/60">
             <a href="/">
                 <img src="/wendi.png" alt="Wendilunar" class="size-7 rounded-[0.55rem]" />
             </a>
-            <a
-                href="/#shop"
-                class="text-sm text-foreground/60 transition-all ease-in-out hover:text-foreground"
-                >Shop</a
-            >
+            <a href="/#shop" class="transition-all ease-in-out hover:text-foreground">Shop</a>
             <a
                 href={donateLink}
                 target="_blank"
-                class="text-sm text-foreground/60 transition-all ease-in-out hover:text-foreground"
-                >Donate</a
+                class="transition-all ease-in-out hover:text-foreground">Donate</a
             >
         </div>
         <CartButton client:load />

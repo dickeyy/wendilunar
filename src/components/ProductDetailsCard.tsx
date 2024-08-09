@@ -41,10 +41,10 @@ export default function ProductDetailsCard({
     };
 
     return (
-        <Card className="flex h-fit w-full flex-col bg-zinc-400/20">
+        <Card className="flex h-fit w-full flex-col bg-card/60">
             <CardHeader>
-                <CardTitle className="text-2xl font-semibold">{product?.title}</CardTitle>
-                <CardDescription className="text-md">
+                <CardTitle className="text-2xl font-extrabold">{product?.title}</CardTitle>
+                <CardDescription className="text-md font-bold">
                     {variant?.availableForSale ? (
                         "$" + parseFloat(variant?.price?.amount ?? "0.00").toFixed(2)
                     ) : (
@@ -57,22 +57,23 @@ export default function ProductDetailsCard({
                     )}
                 </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="font-medium">
                 <div className="flex flex-col items-start gap-8">
                     <div
-                        className="prose prose-sm max-w-none text-sm font-normal text-foreground/80"
+                        className="prose prose-sm text-md max-w-none font-medium text-foreground/80"
                         dangerouslySetInnerHTML={{ __html: product?.descriptionHtml || "" }}
                     />
 
                     <div className="flex w-full flex-col items-start gap-4">
                         <div className="flex w-full flex-col items-start gap-1">
-                            <p className="text-sm font-light text-foreground/80">Quantity</p>
+                            <p className="text-sm font-medium text-foreground/80">Quantity</p>
                             <div
                                 aria-disabled={isLoading}
-                                className="flex w-fit flex-row items-center gap-2 rounded-md border bg-input/20 disabled:bg-opacity-50"
+                                className="flex w-fit flex-row items-center gap-2 rounded-md border bg-neutral-400/20 disabled:bg-opacity-50"
                             >
                                 <Button
                                     variant="ghost"
+                                    className="hover:bg-primary"
                                     onClick={() => {
                                         if (quantity <= 1) return;
                                         setQuantity(quantity - 1);
@@ -93,10 +94,11 @@ export default function ProductDetailsCard({
                                     disabled={isLoading}
                                     min={1}
                                     max={100}
-                                    className="rounded-none border-0 bg-transparent text-center focus-visible:outline-none focus-visible:ring-0"
+                                    className="rounded-none border-0 bg-transparent text-center shadow-none focus-visible:outline-none focus-visible:ring-0"
                                 />
                                 <Button
                                     variant="ghost"
+                                    className="hover:bg-primary"
                                     onClick={() => {
                                         if (quantity >= 100) return;
                                         setQuantity(quantity + 1);
@@ -111,7 +113,7 @@ export default function ProductDetailsCard({
                         <div className="flex w-full flex-col items-start gap-1">
                             {product?.variants?.nodes && product?.variants?.nodes.length > 1 && (
                                 <>
-                                    <p className="text-sm font-light text-foreground/80">
+                                    <p className="text-sm font-medium text-foreground/80">
                                         Select a variant
                                     </p>
                                     <VariantSelector
@@ -128,7 +130,7 @@ export default function ProductDetailsCard({
             </CardContent>
             <CardFooter className="mt-8">
                 <Button
-                    className="w-full"
+                    className="w-full font-bold"
                     size="lg"
                     disabled={isLoading || variant?.availableForSale === false || isAnimating}
                     onClick={handleAddToBasket}

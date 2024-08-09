@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: "Rubik";
-    src: url("/fonts/Rubik-Variable.ttf") format("truetype");
+    font-family: "Nunito";
+    src: url("/fonts/Nunito-Variable.ttf") format("truetype");
     font-style: normal;
     font-display: swap;
 }
@@ -28,12 +28,12 @@
         --card-foreground: 128 80% 2%;
         --border: 128 8% 89%;
         --input: 128 2% 93%;
-        --primary: 156 28% 56%;
-        --primary-foreground: 128 39% 16%;
+        --primary: 158 39% 76%;
+        --primary-foreground: 158 39% 16%;
         --secondary: 98 39% 76%;
         --secondary-foreground: 98 39% 16%;
-        --accent: 158 39% 76%;
-        --accent-foreground: 158 39% 16%;
+        --accent: 156 28% 56%;
+        --accent-foreground: 0 0% 20%;
         --destructive: 16 84% 29%;
         --destructive-foreground: 16 84% 89%;
         --ring: 128 39% 76%;
