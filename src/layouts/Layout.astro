@@ -18,10 +18,11 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
 <!doctype html>
 <html lang="en">
     <head>
-        <!-- analytics -->
-        <script defer data-domain="wendilunar.com" src="https://analytics.kyle.so/js/script.js"
-        ></script>
+        <!-- start analytics -->
+        <script defer data-domain="wendilunar.com" src="https://analytics.kyle.so/js/script.js"></script>
+        <!-- end analytics -->
 
+        <!-- start meta -->
         <meta charset="UTF-8" />
         <meta name="description" content={description ? description : "Wendilunar Merch"} />
         <meta name="viewport" content="width=device-width" />
@@ -51,25 +52,27 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
             streamer,
             tiktok"
         />
+        <!-- end meta -->
 
-        <!-- open graph -->
+        <!-- start open graph -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description || "Wendilunar merch coming soon"} />
         <meta property="og:image" content={ogImage || "/og-image.png"} />
         <meta property="og:url" content={Astro.url} />
+        <!-- end open graph -->
 
-        <!-- twitter -->
+        <!-- start twitter -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@LoonieBoBoonie" />
         <meta name="twitter:creator" content="@LoonieBoBoonie" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description || "Wendilunar merch coming soon"} />
         <meta name="twitter:image" content={ogImage || "/og-image.png"} />
+        <!-- end twitter -->
 
         <title>{title}</title>
-    </head>
-    <body class="m-0 flex min-h-screen flex-col p-0">
+    </head><body class="m-0 flex min-h-screen flex-col p-0">
         {showNavbar && <Navbar />}
         <main class="flex-grow">
             <slot />
