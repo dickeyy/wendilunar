@@ -1,21 +1,10 @@
 import { z } from "astro/zod";
 import { config } from "./config";
-import {
-    ProductsQuery,
-    ProductByHandleQuery,
-    CreateCartMutation,
-    AddCartLinesMutation,
-    GetCartQuery,
-    RemoveCartLinesMutation
-} from "./graphql";
+import { ProductsQuery, ProductByHandleQuery, CreateCartMutation, AddCartLinesMutation, GetCartQuery, RemoveCartLinesMutation } from "./graphql";
 import { CartResult, ProductResult } from "./schema";
 
 // Make a request to Shopify's GraphQL API  and return the data object from the response body as JSON data.
-const makeShopifyRequest = async (
-    query: string,
-    variables: Record<string, unknown> = {},
-    buyerIP: string = ""
-) => {
+const makeShopifyRequest = async (query: string, variables: Record<string, unknown> = {}, buyerIP: string = "") => {
     const isSSR = import.meta.env.SSR;
 
     const apiUrl = `https://${config.shopify.shop}/api/${config.shopify.apiVersion}/graphql.json`;
@@ -61,22 +50,61 @@ const makeShopifyRequest = async (
     return json.data;
 };
 
+// process product variants
+const processProductData = (product: any): z.infer<typeof ProductResult> => {
+    if (!product) return null;
+
+    const colorOption = product.options?.find((option: any) => option.name.toLowerCase() === "color");
+    const sizeOption = product.options?.find((option: any) => option.name.toLowerCase() === "size");
+
+    const colors = colorOption ? colorOption.values : [];
+    const sizes = sizeOption ? sizeOption.values : [];
+
+    const processedVariants =
+        product.variants?.nodes?.map((variant: any) => {
+            const color = variant.selectedOptions?.find((option: any) => option.name.toLowerCase() === "color")?.value;
+            const size = variant.selectedOptions?.find((option: any) => option.name.toLowerCase() === "size")?.value;
+
+            return {
+                ...variant,
+                color,
+                size
+            };
+        }) || [];
+
+    const processedProduct = {
+        ...product,
+        colors,
+        sizes,
+        variants: {
+            nodes: processedVariants
+        }
+    };
+
+    // Use Zod to parse and validate the processed product
+    return ProductResult.parse(processedProduct);
+};
+
 // Get all products or a limited number of products (default: 10)
 export const getAllProducts = async (options: { limit?: number; buyerIP: string }) => {
     const { limit = 10, buyerIP } = options;
 
-    const data = await makeShopifyRequest(ProductsQuery, { first: limit }, buyerIP);
-    const { products } = data;
+    try {
+        const data = await makeShopifyRequest(ProductsQuery, { first: limit }, buyerIP);
+        const { products } = data;
 
-    if (!products) {
-        throw new Error("No products found");
+        if (!products || !products.edges) {
+            throw new Error("No products found or invalid data structure");
+        }
+
+        const productsList = products.edges.map((edge: any) => edge.node);
+        const processedProducts = productsList.map(processProductData).filter(Boolean);
+
+        return processedProducts;
+    } catch (error) {
+        console.error("Error in getAllProducts:", error);
+        return []; // Return an empty array if there's an error
     }
-
-    const productsList = products.edges.map((edge: any) => edge.node);
-    const ProductsResult = z.array(ProductResult);
-    const parsedProducts = ProductsResult.parse(productsList);
-
-    return parsedProducts;
 };
 
 // Get a single product by handle
@@ -90,7 +118,7 @@ export const getProductByHandle = async (handle: string, buyerIP: string = "") =
 
     const productResult = ProductResult.parse(product);
 
-    return productResult;
+    return processProductData(productResult);
 };
 
 // Create a cart and add a line item to it and return the cart object
@@ -138,5 +166,17 @@ export const getCart = async (id: string) => {
     const { cart } = data;
     const parsedCart = CartResult.parse(cart);
 
-    return parsedCart;
+    // Process product data for each item in the cart
+    const processedCart = {
+        ...parsedCart,
+        lines: {
+            ...parsedCart.lines,
+            nodes: parsedCart.lines.nodes.map((item) => ({
+                ...item,
+                merchandise: processProductData(item.merchandise)
+            }))
+        }
+    };
+
+    return processedCart;
 };

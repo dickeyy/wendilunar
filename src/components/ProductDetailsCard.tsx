@@ -1,58 +1,71 @@
-import type { z } from "astro/zod";
+import React, { useState, useEffect } from "react";
+import { useReward } from "react-rewards";
+import { ShoppingBasketIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import VariantSelector from "./VariantSelector";
-import type { ProductResult } from "@/lib/schema";
-import { ShoppingBasketIcon } from "lucide-react";
-import { useState } from "react";
-import { useReward } from "react-rewards";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { addCartItem } from "@/stores/cart-store";
 
-export default function ProductDetailsCard({
-    product
-}: {
-    product: z.infer<typeof ProductResult>;
-}) {
+export default function ProductDetailsCard({ product }) {
     const { reward, isAnimating } = useReward("rewardId", "confetti", {
         elementCount: 100,
         spread: 100
     });
 
-    const [variant, setVariant] = useState(product?.variants?.nodes[0]);
-    const [quantity, setQuantity] = useState<number>(1);
+    const [selectedColor, setSelectedColor] = useState("");
+    const [selectedSize, setSelectedSize] = useState("");
+    const [quantity, setQuantity] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedVariant, setSelectedVariant] = useState(null);
+
+    useEffect(() => {
+        if (product.variants.nodes.length > 0) {
+            const firstAvailableVariant = product.variants.nodes.find((variant) => variant.availableForSale);
+            if (firstAvailableVariant) {
+                setSelectedVariant(firstAvailableVariant);
+                setSelectedColor(firstAvailableVariant.color || "");
+                setSelectedSize(firstAvailableVariant.size || "");
+            } else {
+                setSelectedVariant(product.variants.nodes[0]);
+                setSelectedColor(product.variants.nodes[0].color || "");
+                setSelectedSize(product.variants.nodes[0].size || "");
+            }
+        }
+    }, [product]);
+
+    useEffect(() => {
+        const variant = product.variants.nodes.find((v) => v.color === selectedColor && (product.sizes.length === 0 || v.size === selectedSize));
+        setSelectedVariant(variant || null);
+    }, [selectedColor, selectedSize, product.variants.nodes, product.sizes]);
 
     const handleAddToBasket = async () => {
-        if (isLoading) return;
-        if (!variant) return;
+        if (isLoading || !selectedVariant) return;
 
         setIsLoading(true);
         reward();
 
         await addCartItem({
-            id: variant?.id as string,
+            id: selectedVariant.id,
             quantity: quantity
         }).then(() => {
             setIsLoading(false);
         });
-
-        setIsLoading(false);
     };
+
+    const isProductAvailable = product.variants.nodes.some((variant) => variant.availableForSale);
 
     return (
         <Card className="flex h-fit w-full flex-col bg-card/60">
             <CardHeader>
-                <CardTitle className="text-2xl font-extrabold">{product?.title}</CardTitle>
+                <CardTitle className="text-2xl font-extrabold">{product.title}</CardTitle>
                 <CardDescription className="text-md font-bold">
-                    {variant?.availableForSale ? (
-                        "$" + parseFloat(variant?.price?.amount ?? "0.00").toFixed(2)
+                    {selectedVariant?.availableForSale ? (
+                        "$" + parseFloat(selectedVariant.price.amount).toFixed(2)
                     ) : (
                         <p className="gap-2 text-red-500">
-                            <span className="mr-2 line-through">
-                                $ {parseFloat(variant?.price?.amount ?? "0.00").toFixed(2)}
-                            </span>{" "}
-                            Out of stock
+                            <span className="mr-2 line-through">$ {parseFloat(selectedVariant?.price.amount || "0.00").toFixed(2)}</span>{" "}
+                            {isProductAvailable ? "Selected variant out of stock" : "Out of stock"}
                         </p>
                     )}
                 </CardDescription>
@@ -60,91 +73,105 @@ export default function ProductDetailsCard({
             <CardContent className="font-medium">
                 <div className="flex flex-col items-start gap-8">
                     <div
-                        className="prose prose-sm text-md max-w-none font-medium text-foreground/80"
-                        dangerouslySetInnerHTML={{ __html: product?.descriptionHtml || "" }}
+                        className="prose prose-sm max-w-none text-sm font-medium text-foreground/80"
+                        dangerouslySetInnerHTML={{ __html: product.descriptionHtml || "" }}
                     />
 
                     <div className="flex w-full flex-col items-start gap-4">
+                        {product.colors && product.colors.length > 0 && (
+                            <div className="flex w-full flex-col items-start gap-1">
+                                <p className="text-sm font-medium text-foreground/80">Color</p>
+                                <Select value={selectedColor} onValueChange={setSelectedColor} disabled={isLoading}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select a color" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {product.colors.map((color) => (
+                                            <SelectItem key={color} value={color}>
+                                                {color}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+
+                        {product.sizes && product.sizes.length > 0 && (
+                            <div className="flex w-full flex-col items-start gap-1">
+                                <p className="text-sm font-medium text-foreground/80">Size</p>
+                                <Select value={selectedSize} onValueChange={setSelectedSize} disabled={isLoading}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Select a size" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {product.sizes.map((size) => (
+                                            <SelectItem key={size} value={size}>
+                                                {size}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
+
                         <div className="flex w-full flex-col items-start gap-1">
                             <p className="text-sm font-medium text-foreground/80">Quantity</p>
                             <div
                                 aria-disabled={isLoading}
-                                className="flex w-fit flex-row items-center gap-2 rounded-md border bg-neutral-400/20 disabled:bg-opacity-50"
+                                className="flex h-fit w-fit flex-row items-center gap-2 rounded-md border border-input py-0 shadow-sm disabled:bg-opacity-50"
                             >
                                 <Button
                                     variant="ghost"
-                                    className="hover:bg-primary"
-                                    onClick={() => {
-                                        if (quantity <= 1) return;
-                                        setQuantity(quantity - 1);
-                                    }}
+                                    className="hover:bg-muted"
+                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                     disabled={quantity <= 1 || isLoading}
+                                    size="sm"
                                 >
                                     -
                                 </Button>
                                 <Input
                                     type="number"
                                     onChange={(e) => {
-                                        let q = parseInt(e.target.value);
-                                        if (q <= 0) q = 1;
-                                        if (q > 100) q = 100;
+                                        const q = Math.min(100, Math.max(1, parseInt(e.target.value) || 1));
                                         setQuantity(q);
                                     }}
                                     value={quantity}
                                     disabled={isLoading}
                                     min={1}
                                     max={100}
-                                    className="rounded-none border-0 bg-transparent text-center shadow-none focus-visible:outline-none focus-visible:ring-0"
+                                    className="h-fit rounded-none border-0 bg-transparent py-0 text-center shadow-none focus-visible:outline-none focus-visible:ring-0"
                                 />
                                 <Button
                                     variant="ghost"
-                                    className="hover:bg-primary"
-                                    onClick={() => {
-                                        if (quantity >= 100) return;
-                                        setQuantity(quantity + 1);
-                                    }}
+                                    className="hover:bg-muted"
+                                    onClick={() => setQuantity(Math.min(100, quantity + 1))}
                                     disabled={quantity >= 100 || isLoading}
+                                    size="sm"
                                 >
                                     +
                                 </Button>
                             </div>
                         </div>
-
-                        <div className="flex w-full flex-col items-start gap-1">
-                            {product?.variants?.nodes && product?.variants?.nodes.length > 1 && (
-                                <>
-                                    <p className="text-sm font-medium text-foreground/80">
-                                        Select a variant
-                                    </p>
-                                    <VariantSelector
-                                        disabled={isLoading}
-                                        selectedVariant={variant}
-                                        product={product}
-                                        setSelectedVariant={setVariant}
-                                    />
-                                </>
-                            )}
-                        </div>
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="mt-8">
+            <CardFooter>
                 <Button
                     className="w-full font-bold"
                     size="lg"
-                    disabled={isLoading || variant?.availableForSale === false || isAnimating}
+                    disabled={isLoading || !selectedVariant?.availableForSale || isAnimating}
                     onClick={handleAddToBasket}
                 >
                     <span id="rewardId" />
-
-                    {variant?.availableForSale ? (
+                    {selectedVariant?.availableForSale ? (
                         <>
                             <ShoppingBasketIcon className="mr-2 inline-block size-5 disabled:cursor-not-allowed" />
                             <p>
-                                Add {isNaN(quantity) ? "1" : quantity} Item{quantity > 1 ? "s" : ""}{" "}
-                                to Basket
+                                Add {quantity} Item{quantity > 1 ? "s" : ""} to Basket
                             </p>
                         </>
+                    ) : isProductAvailable ? (
+                        "Selected variant out of stock"
                     ) : (
                         "Out of stock"
                     )}

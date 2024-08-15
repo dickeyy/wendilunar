@@ -1,0 +1,88 @@
+---
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import "@/styles/global.css";
+import "@fontsource-variable/rubik";
+
+interface Props {
+    frontmatter;
+}
+
+const { frontmatter } = Astro.props as Props;
+---
+
+<html lang="en">
+    <head>
+        <!-- start analytics -->
+        <script defer data-domain="wendilunar.com" src="https://analytics.kyle.so/js/script.js"
+        ></script>
+        <!-- end analytics -->
+
+        <!-- start meta -->
+        <meta charset="UTF-8" />
+        <meta name="description" content={"WendiLunar Merch"} />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="robots" content="index, follow" />
+        <meta
+            name="keywords"
+            content="
+            wendilunar,
+            wendi,
+            lunar,
+            wendy lunar,
+            merch,
+            merchandise,
+            shirt,
+            socks,
+            hoodie,
+            flag,
+            website,
+            twitch,
+            content,
+            creator,
+            dickey,
+            youtube,
+            youtuber,
+            streamer,
+            tiktok"
+        />
+        <!-- end meta -->
+
+        <!-- start open graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={frontmatter.title + " - WendiLunar"} />
+        <meta property="og:description" content={"WendiLunar merch coming soon"} />
+        <meta property="og:image" content={"/og-image.png"} />
+        <meta property="og:url" content={Astro.url} />
+        <!-- end open graph -->
+
+        <!-- start twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@LoonieBoBoonie" />
+        <meta name="twitter:creator" content="@LoonieBoBoonie" />
+        <meta name="twitter:title" content={frontmatter.title + " - WendiLunar"} />
+        <meta name="twitter:description" content={"WendiLunar merch coming soon"} />
+        <meta name="twitter:image" content={"/og-image.png"} />
+        <!-- end twitter -->
+
+        <title>{frontmatter.title + " - WendiLunar"}</title>
+    </head>
+    <body class="m-0 flex min-h-screen flex-col p-0">
+        <Navbar />
+        <main
+            class="mt-16 flex w-full flex-grow flex-col items-center justify-start px-4 py-4 sm:mt-20 sm:px-8"
+        >
+            <div class="flex w-full max-w-3xl flex-1 flex-col">
+                <h1 class="mb-6 text-3xl font-bold sm:text-4xl">{frontmatter.title}</h1>
+                <div
+                    class="prose prose-sm sm:prose lg:prose-lg xl:prose-lg prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h6:text-sm prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:list-disc prose-ol:list-decimal prose-li:text-gray-700 max-w-none"
+                >
+                    <slot />
+                </div>
+            </div>
+        </main>
+        <Footer />
+    </body>
+</html>

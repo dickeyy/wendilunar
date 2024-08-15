@@ -5,20 +5,18 @@ import CartSheet from "./CartSheet";
 const donateLink = "https://streamlabs.com/wendilunar/tip";
 ---
 
-<nav class="fixed top-2 z-10 mx-auto flex w-screen items-center justify-center">
-    <div
-        class="glass-blur flex w-[98%] items-center justify-between rounded-md border border-accent/20 bg-accent/20 p-1 shadow-sm sm:w-[95.8%]"
-    >
+<nav class="glass-blur fixed z-10 mx-auto flex w-screen items-center justify-center">
+    <div class="flex w-[100%] items-center justify-between px-8 py-2">
         <div class="flex items-center gap-4 text-sm font-medium text-foreground/60">
-            <a href="/">
-                <img src="/wendi.png" alt="Wendilunar" class="size-7 rounded-[0.55rem]" />
+            <a href="/" class="mr-4">
+                <div class="flex items-center gap-2">
+                    <img src="/wendi.png" alt="WendiLunar" class="size-7 rounded-[0.55rem]" />
+                    <p class="text-sm font-bold">WendiLunar</p>
+                </div>
             </a>
-            <a href="/#shop" class="transition-all ease-in-out hover:text-foreground">Shop</a>
-            <a
-                href={donateLink}
-                target="_blank"
-                class="transition-all ease-in-out hover:text-foreground">Donate</a
-            >
+
+            <a href="/#shop" class="transition-all ease-in-out hover:text-foreground">Merch</a>
+            <a href={donateLink} target="_blank" class="transition-all ease-in-out hover:text-foreground">Donate</a>
         </div>
         <CartButton client:load />
         <CartSheet client:load />

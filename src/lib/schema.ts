@@ -54,27 +54,59 @@ export const CartResult = z
     })
     .nullable();
 
-export const VariantResult = z.object({
-    id: z.string(),
-    title: z.string(),
-    availableForSale: z.boolean(),
-    quantityAvailable: z.number().int(),
-    price: MoneyV2Result
+export const OptionResult = z.object({
+    name: z.string(),
+    values: z.array(z.string())
 });
 
-export const ProductResult = z
-    .object({
-        id: z.string(),
-        title: z.string(),
-        handle: z.string(),
-        description: z.string(),
-        descriptionHtml: z.string(),
-        images: z.object({
-            nodes: z.array(ImageResult)
-        }),
-        variants: z.object({
+export const SelectedOptionResult = z.object({
+    name: z.string(),
+    value: z.string()
+});
+
+export const VariantResult = z.object({
+    id: z.string(),
+    title: z.string().optional(),
+    availableForSale: z.boolean().optional(),
+    quantityAvailable: z.number().int().optional(),
+    selectedOptions: z
+        .array(
+            z.object({
+                name: z.string(),
+                value: z.string()
+            })
+        )
+        .optional(),
+    price: MoneyV2Result.optional(),
+    color: z.string().optional(),
+    size: z.string().optional()
+});
+
+export const ProductResult = z.object({
+    id: z.string(),
+    title: z.string(),
+    handle: z.string(),
+    description: z.string().optional(),
+    descriptionHtml: z.string().optional(),
+    options: z
+        .array(
+            z.object({
+                name: z.string(),
+                values: z.array(z.string())
+            })
+        )
+        .optional(),
+    images: z
+        .object({
+            nodes: z.array(ImageResult.optional())
+        })
+        .optional(),
+    variants: z
+        .object({
             nodes: z.array(VariantResult)
-        }),
-        featuredImage: ImageResult.nullable()
-    })
-    .nullable();
+        })
+        .optional(),
+    featuredImage: ImageResult.nullable().optional(),
+    colors: z.array(z.string()).optional(),
+    sizes: z.array(z.string()).optional()
+});

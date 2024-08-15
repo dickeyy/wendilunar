@@ -17,6 +17,10 @@ fragment cartFragment on Cart {
         ...on ProductVariant {
           id
           title
+          selectedOptions {
+            name
+            value
+          }
           image {
             url
             altText
@@ -55,6 +59,10 @@ fragment productFragment on Product {
   handle
   description
   descriptionHtml
+  options {
+    name
+    values
+  }
   images (first: 10) {
     nodes {
       url
@@ -63,12 +71,16 @@ fragment productFragment on Product {
       altText
     }
   }
-  variants(first: 10) {
+  variants(first: 100) {
     nodes {
       id
       title
       availableForSale
       quantityAvailable
+      selectedOptions {
+        name
+        value
+      }
       price {
         amount
         currencyCode
