@@ -22,7 +22,7 @@ const donateLink = "https://streamlabs.com/wendilunar/tip";
                 class="transition-all ease-in-out hover:text-foreground">Donate</a
             >
         </div>
-        <CartButton client:load />
-        <CartSheet client:load />
+        <CartButton client:only="react" />
+        <CartSheet client:only="react" />
     </div>
 </nav>
