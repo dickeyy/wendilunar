@@ -19,7 +19,8 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
 <html lang="en">
     <head>
         <!-- start analytics -->
-        <script defer data-domain="wendilunar.com" src="https://analytics.kyle.so/js/script.js"></script>
+        <script defer data-domain="wendilunar.com" src="https://analytics.kyle.so/js/script.js"
+        ></script>
         <!-- end analytics -->
 
         <!-- start meta -->
@@ -57,7 +58,7 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
         <!-- start open graph -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
-        <meta property="og:description" content={description || "WendiLunar merch coming soon"} />
+        <meta property="og:description" content={description || "WendiLunar merch!"} />
         <meta property="og:image" content={ogImage || "/og-image.png"} />
         <meta property="og:url" content={Astro.url} />
         <!-- end open graph -->
@@ -67,7 +68,7 @@ const { title, description, ogImage, showFooter = true, showNavbar = true } = As
         <meta name="twitter:site" content="@LoonieBoBoonie" />
         <meta name="twitter:creator" content="@LoonieBoBoonie" />
         <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description || "WendiLunar merch coming soon"} />
+        <meta name="twitter:description" content={description || "WendiLunar merch!"} />
         <meta name="twitter:image" content={ogImage || "/og-image.png"} />
         <!-- end twitter -->
 
