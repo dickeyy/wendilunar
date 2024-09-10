@@ -6,7 +6,7 @@ const donateLink = "https://streamlabs.com/wendilunar/tip";
 ---
 
 <nav class="glass-blur fixed z-10 mx-auto flex w-screen items-center justify-center">
-    <div class="flex w-[100%] items-center justify-between px-8 py-2">
+    <div class="flex w-[100%] items-center justify-between px-4 py-2 sm:px-8">
         <div class="flex items-center gap-4 text-sm font-medium text-foreground/60">
             <a href="/" class="mr-4">
                 <div class="flex items-center gap-2">
@@ -16,7 +16,11 @@ const donateLink = "https://streamlabs.com/wendilunar/tip";
             </a>
 
             <a href="/#shop" class="transition-all ease-in-out hover:text-foreground">Merch</a>
-            <a href={donateLink} target="_blank" class="transition-all ease-in-out hover:text-foreground">Donate</a>
+            <a
+                href={donateLink}
+                target="_blank"
+                class="transition-all ease-in-out hover:text-foreground">Donate</a
+            >
         </div>
         <CartButton client:load />
         <CartSheet client:load />
