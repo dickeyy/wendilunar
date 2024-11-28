@@ -13,6 +13,7 @@ try {
     product = await getProductByHandle(Astro.params.handle || "", ip);
 } catch (e) {
     console.error(e);
+    return Astro.redirect("/404");
 }
 if (!product) {
     return Astro.redirect("/404");

@@ -18,26 +18,51 @@ export default function ProductDetailsCard({ product }) {
     const [quantity, setQuantity] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedVariant, setSelectedVariant] = useState(null);
+    const [isProductAvailable, setIsProductAvailable] = useState(true);
+
+    // Helper function to safely get variants
+    const getVariants = () => {
+        return product?.variants?.nodes || [product]; // Fallback to product itself if no variants
+    };
+
+    // Helper function to safely get variant properties
+    const getVariantProperties = () => {
+        const variants = getVariants();
+        const colors = [...new Set(variants.map((v) => v.color).filter(Boolean))];
+        const sizes = [...new Set(variants.map((v) => v.size).filter(Boolean))];
+        return { colors, sizes };
+    };
 
     useEffect(() => {
-        if (product.variants.nodes.length > 0) {
-            const firstAvailableVariant = product.variants.nodes.find((variant) => variant.availableForSale);
-            if (firstAvailableVariant) {
-                setSelectedVariant(firstAvailableVariant);
-                setSelectedColor(firstAvailableVariant.color || "");
-                setSelectedSize(firstAvailableVariant.size || "");
-            } else {
-                setSelectedVariant(product.variants.nodes[0]);
-                setSelectedColor(product.variants.nodes[0].color || "");
-                setSelectedSize(product.variants.nodes[0].size || "");
-            }
+        const variants = getVariants();
+        if (variants.length > 0) {
+            const firstAvailableVariant =
+                variants.find((variant) => variant.availableForSale !== false) || variants[0];
+
+            setIsProductAvailable(firstAvailableVariant.availableForSale !== false);
+            setSelectedVariant(firstAvailableVariant);
+            setSelectedColor(firstAvailableVariant.color || "");
+            setSelectedSize(firstAvailableVariant.size || "");
         }
     }, [product]);
 
     useEffect(() => {
-        const variant = product.variants.nodes.find((v) => v.color === selectedColor && (product.sizes.length === 0 || v.size === selectedSize));
-        setSelectedVariant(variant || null);
-    }, [selectedColor, selectedSize, product.variants.nodes, product.sizes]);
+        const variants = getVariants();
+        const { sizes } = getVariantProperties();
+
+        // If we have no color/size selections and only one variant, use that
+        if (variants.length === 1) {
+            setSelectedVariant(variants[0]);
+            return;
+        }
+
+        const variant = variants.find(
+            (v) =>
+                (!v.color || v.color === selectedColor) &&
+                (!v.size || sizes.length === 0 || v.size === selectedSize)
+        );
+        setSelectedVariant(variant || variants[0]);
+    }, [selectedColor, selectedSize, product]);
 
     const handleAddToBasket = async () => {
         if (isLoading || !selectedVariant) return;
@@ -53,18 +78,20 @@ export default function ProductDetailsCard({ product }) {
         });
     };
 
-    const isProductAvailable = product.variants.nodes.some((variant) => variant.availableForSale);
+    const { colors, sizes } = getVariantProperties();
 
     return (
         <Card className="flex h-fit w-full flex-col bg-card/60">
             <CardHeader>
                 <CardTitle className="text-2xl font-extrabold">{product.title}</CardTitle>
                 <CardDescription className="text-md font-bold">
-                    {selectedVariant?.availableForSale ? (
-                        "$" + parseFloat(selectedVariant.price.amount).toFixed(2)
+                    {isProductAvailable ? (
+                        "$" + parseFloat(selectedVariant?.price?.amount || 0).toFixed(2)
                     ) : (
                         <p className="gap-2 text-red-500">
-                            <span className="mr-2 line-through">$ {parseFloat(selectedVariant?.price.amount || "0.00").toFixed(2)}</span>{" "}
+                            <span className="mr-2 line-through">
+                                ${parseFloat(selectedVariant?.price?.amount || 0).toFixed(2)}
+                            </span>{" "}
                             {isProductAvailable ? "Selected variant out of stock" : "Out of stock"}
                         </p>
                     )}
@@ -78,17 +105,24 @@ export default function ProductDetailsCard({ product }) {
                     />
 
                     <div className="flex w-full flex-col items-start gap-4">
-                        {product.colors && product.colors.length > 0 && (
+                        {colors.length > 0 && (
                             <div className="flex w-full flex-col items-start gap-1">
                                 <p className="text-sm font-medium text-foreground/80">Color</p>
-                                <Select value={selectedColor} onValueChange={setSelectedColor} disabled={isLoading}>
+                                <Select
+                                    value={selectedColor}
+                                    onValueChange={setSelectedColor}
+                                    disabled={isLoading}
+                                >
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select a color" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {product.colors.map((color) => (
-                                            <SelectItem key={color} value={color}>
-                                                {color}
+                                        {colors.map((color, index) => (
+                                            <SelectItem
+                                                key={String((color as any) + index)}
+                                                value={color as any}
+                                            >
+                                                {color as any}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -96,17 +130,24 @@ export default function ProductDetailsCard({ product }) {
                             </div>
                         )}
 
-                        {product.sizes && product.sizes.length > 0 && (
+                        {sizes.length > 0 && (
                             <div className="flex w-full flex-col items-start gap-1">
                                 <p className="text-sm font-medium text-foreground/80">Size</p>
-                                <Select value={selectedSize} onValueChange={setSelectedSize} disabled={isLoading}>
+                                <Select
+                                    value={selectedSize}
+                                    onValueChange={setSelectedSize}
+                                    disabled={isLoading}
+                                >
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select a size" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {product.sizes.map((size) => (
-                                            <SelectItem key={size} value={size}>
-                                                {size}
+                                        {sizes.map((size, index) => (
+                                            <SelectItem
+                                                key={String((size as any) + index)}
+                                                value={size as any}
+                                            >
+                                                {size as any}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -132,7 +173,10 @@ export default function ProductDetailsCard({ product }) {
                                 <Input
                                     type="number"
                                     onChange={(e) => {
-                                        const q = Math.min(100, Math.max(1, parseInt(e.target.value) || 1));
+                                        const q = Math.min(
+                                            100,
+                                            Math.max(1, parseInt(e.target.value) || 1)
+                                        );
                                         setQuantity(q);
                                     }}
                                     value={quantity}
@@ -159,19 +203,17 @@ export default function ProductDetailsCard({ product }) {
                 <Button
                     className="w-full font-bold"
                     size="lg"
-                    disabled={isLoading || !selectedVariant?.availableForSale || isAnimating}
+                    disabled={isLoading || !isProductAvailable || isAnimating}
                     onClick={handleAddToBasket}
                 >
                     <span id="rewardId" />
-                    {selectedVariant?.availableForSale ? (
+                    {isProductAvailable ? (
                         <>
                             <ShoppingBasketIcon className="mr-2 inline-block size-5 disabled:cursor-not-allowed" />
                             <p>
                                 Add {quantity} Item{quantity > 1 ? "s" : ""} to Basket
                             </p>
                         </>
-                    ) : isProductAvailable ? (
-                        "Selected variant out of stock"
                     ) : (
                         "Out of stock"
                     )}
