@@ -67,7 +67,9 @@ function CartItems({ c }: { c: z.infer<typeof CartResult> }) {
     return (
         <ScrollArea className="mt-8 h-[73%] w-full">
             {c?.lines.nodes.length === 0 && <EmptyCart />}
-            {c?.lines.nodes.map((line: z.infer<typeof CartItemResult>) => <CartItem line={line} />)}
+            {c?.lines.nodes.map((line: z.infer<typeof CartItemResult>, index) => (
+                <CartItem line={line} key={index} />
+            ))}
         </ScrollArea>
     );
 }
