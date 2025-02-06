@@ -108,5 +108,18 @@ export const ProductResult = z.object({
         .optional(),
     featuredImage: ImageResult.nullable().optional(),
     colors: z.array(z.string()).optional(),
-    sizes: z.array(z.string()).optional()
+    sizes: z.array(z.string()).optional(),
+    collections: z
+        .object({
+            nodes: z.array(
+                z.object({
+                    id: z.string(),
+                    title: z.string(),
+                    handle: z.string(),
+                    description: z.string().optional(),
+                    image: ImageResult.nullable().optional()
+                })
+            )
+        })
+        .optional()
 });

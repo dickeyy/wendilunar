@@ -1,10 +1,22 @@
 import { z } from "astro/zod";
 import { config } from "./config";
-import { ProductsQuery, ProductByHandleQuery, CreateCartMutation, AddCartLinesMutation, GetCartQuery, RemoveCartLinesMutation } from "./graphql";
+import {
+    ProductsQuery,
+    ProductByHandleQuery,
+    CreateCartMutation,
+    AddCartLinesMutation,
+    GetCartQuery,
+    RemoveCartLinesMutation,
+    ProductsAndCollectionsQuery
+} from "./graphql";
 import { CartResult, ProductResult } from "./schema";
 
 // Make a request to Shopify's GraphQL API  and return the data object from the response body as JSON data.
-const makeShopifyRequest = async (query: string, variables: Record<string, unknown> = {}, buyerIP: string = "") => {
+const makeShopifyRequest = async (
+    query: string,
+    variables: Record<string, unknown> = {},
+    buyerIP: string = ""
+) => {
     const isSSR = import.meta.env.SSR;
 
     const apiUrl = `https://${config.shopify.shop}/api/${config.shopify.apiVersion}/graphql.json`;
@@ -54,7 +66,9 @@ const makeShopifyRequest = async (query: string, variables: Record<string, unkno
 const processProductData = (product: any): z.infer<typeof ProductResult> => {
     if (!product) return null;
 
-    const colorOption = product.options?.find((option: any) => option.name.toLowerCase() === "color");
+    const colorOption = product.options?.find(
+        (option: any) => option.name.toLowerCase() === "color"
+    );
     const sizeOption = product.options?.find((option: any) => option.name.toLowerCase() === "size");
 
     const colors = colorOption ? colorOption.values : [];
@@ -62,8 +76,12 @@ const processProductData = (product: any): z.infer<typeof ProductResult> => {
 
     const processedVariants =
         product.variants?.nodes?.map((variant: any) => {
-            const color = variant.selectedOptions?.find((option: any) => option.name.toLowerCase() === "color")?.value;
-            const size = variant.selectedOptions?.find((option: any) => option.name.toLowerCase() === "size")?.value;
+            const color = variant.selectedOptions?.find(
+                (option: any) => option.name.toLowerCase() === "color"
+            )?.value;
+            const size = variant.selectedOptions?.find(
+                (option: any) => option.name.toLowerCase() === "size"
+            )?.value;
 
             return {
                 ...variant,
@@ -85,25 +103,44 @@ const processProductData = (product: any): z.infer<typeof ProductResult> => {
     return ProductResult.parse(processedProduct);
 };
 
+type ProductsAndCollections = {
+    products: any[];
+    collections: any[];
+};
+
 // Get all products or a limited number of products (default: 10)
-export const getAllProducts = async (options: { limit?: number; buyerIP: string }) => {
+export const getAllProducts = async (options: {
+    limit?: number;
+    buyerIP: string;
+}): Promise<ProductsAndCollections> => {
     const { limit = 10, buyerIP } = options;
 
     try {
-        const data = await makeShopifyRequest(ProductsQuery, { first: limit }, buyerIP);
-        const { products } = data;
+        const data = await makeShopifyRequest(
+            ProductsAndCollectionsQuery,
+            { first: limit },
+            buyerIP
+        );
+        const { products, collections } = data;
 
-        if (!products || !products.edges) {
-            throw new Error("No products found or invalid data structure");
+        if (!products?.edges || !collections?.nodes) {
+            throw new Error("No products/collections found or invalid data structure");
         }
 
         const productsList = products.edges.map((edge: any) => edge.node);
         const processedProducts = productsList.map(processProductData).filter(Boolean);
 
-        return processedProducts;
+        // Return both products and collections
+        return {
+            products: processedProducts,
+            collections: collections.nodes
+        };
     } catch (error) {
         console.error("Error in getAllProducts:", error);
-        return []; // Return an empty array if there's an error
+        return {
+            products: [],
+            collections: []
+        };
     }
 };
 

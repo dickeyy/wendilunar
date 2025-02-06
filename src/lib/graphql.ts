@@ -59,6 +59,13 @@ fragment productFragment on Product {
   handle
   description
   descriptionHtml
+  collections(first: 10) {
+    nodes {
+      id
+      title
+      handle
+    }
+  }
   options {
     name
     values
@@ -179,4 +186,50 @@ export const RemoveCartLinesMutation = `#graphql
     }
   }
   ${CART_FRAGMENT}
+`;
+
+export const CollectionsQuery = `#graphql
+  query ($first: Int!) {
+    collections(first: $first) {
+      nodes {
+        id
+        title
+        handle
+        description
+        image {
+          url
+          width
+          height
+          altText
+        }
+      }
+    }
+  }
+`;
+
+export const ProductsAndCollectionsQuery = `#graphql
+  query ($first: Int!) {
+    products(first: $first) {
+      edges {
+        node {
+          ...productFragment
+        }
+      }
+    }
+    collections(first: 100) {
+      nodes {
+        id
+        title
+        handle
+        description
+        image {
+          url
+          width
+          height
+          altText
+        }
+      }
+    }
+  }
+  ${PRODUCT_FRAGMENT}
 `;
